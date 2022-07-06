@@ -15,6 +15,7 @@ import (
 	"auth-skm/src/interface/rest/response"
 	"auth-skm/src/interface/rest/route"
 
+	layananHandler "auth-skm/src/interface/rest/handlers/layanan"
 	userHandler "auth-skm/src/interface/rest/handlers/user"
 
 	"github.com/go-chi/chi/middleware"
@@ -94,10 +95,12 @@ func makeRoute(
 
 	uh := userHandler.NewUserHandler(respClient, useCases.UserUseCase, useCases.LoginUseCase)
 
-	r.Route("/api", func(r chi.Router) {
+	lh := layananHandler.NewLayananHandler(respClient, useCases.LayananUseCase)
+	r.Route("/api/", func(r chi.Router) {
 		// health check
 		r.Mount("/", route.HealthRouter(hh))
 		r.Mount("/skm", route.UserAppRouter(uh))
+		r.Mount("/skm/layanan", route.LayananAppRouter(lh))
 
 	})
 

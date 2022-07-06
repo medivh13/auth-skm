@@ -13,6 +13,7 @@ import (
 
 	ms_log "auth-skm/src/infra/log"
 
+	layananUc "auth-skm/src/app/use_cases/layanan"
 	loginUc "auth-skm/src/app/use_cases/login"
 	userUc "auth-skm/src/app/use_cases/user"
 
@@ -56,6 +57,7 @@ func main() {
 	}(logger, postgresdb.SqlDB, postgresdb.DB.Name())
 
 	userRepository := postgres.NewUsersRepository(postgresdb.DB)
+	layananRepository := postgres.NewLayananService()
 
 	httpServer, err := rest.New(
 		conf.Http,
@@ -63,8 +65,9 @@ func main() {
 		logger,
 		usecases.AllUseCases{
 
-			UserUseCase:  userUc.NewUserUseCase(userRepository),
-			LoginUseCase: loginUc.NewUserUseCase(userRepository),
+			UserUseCase:    userUc.NewUserUseCase(userRepository),
+			LoginUseCase:   loginUc.NewUserUseCase(userRepository),
+			LayananUseCase: layananUc.NewLayananUseCase(layananRepository),
 		},
 	)
 	if err != nil {
